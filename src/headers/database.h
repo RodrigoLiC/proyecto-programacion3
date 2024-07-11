@@ -1,9 +1,9 @@
 #ifndef PROYECTO_PROGRAMACION3_DATABASE_H
 #define PROYECTO_PROGRAMACION3_DATABASE_H
 
-#include <vector>
+#include "trie.h"
+#include "utility.h"
 
-using namespace std;
 
 /** Entidad que representa una película. @n
  * Estructura: @n@n
@@ -39,12 +39,12 @@ public:
         cout << "Synopsis Source: " << synopsis_source << endl;
         cout << "Tags: ";
         for (const string& tag : tags) {
-            cout << tag << ", ";
+            cout << "["<< tag << "] ";
         }
         cout << endl;
     }
     void imprimirPreview() {
-        cout << "===============\n";
+        cout << "==================================================\n";
         cout << "IMDB_ID: " << imdb_id << endl;
         cout << "Title: " << title << endl;
         if (plot_synopsis.size() > 100) {
@@ -56,11 +56,62 @@ public:
         cout << "Synopsis Source: " << synopsis_source << endl;
         cout << "Tags: ";
         for (const string& tag : tags) {
-            cout << tag << ", ";
+            cout << "["<< tag << "] ";
         }
-        cout << endl;
+        cout << "\n";
+        cout << "==================================================\n";
     }
 };
+
+// Singleton
+class Database {
+private:
+    vector<Movie> movies;
+    static Database* instance;
+    Trie trie;
+    Database(){};
+public:
+    static Database* getInstance() {
+        if (instance == nullptr) {
+            instance = new Database();
+        }
+        return instance;
+    }
+
+    void addMovieObject(const Movie& movie) {
+        movies.push_back(movie);
+    }
+
+    void addMovieByValues(const string &imdbId, const string &title, const string &plotSynopsis,
+                          const vector<string> &tags, const string &split, const string &synopsisSource) {
+        movies.emplace_back(imdbId, title, plotSynopsis, tags, split, synopsisSource);
+    }
+
+    vector<Movie> getMovies() {
+        return movies;
+    }
+
+    void generateTrie() {
+        cout << "Generating trie...\n";
+        for(int i = 0; i < movies.size(); i++){
+            auto title = splitString(toAlphabet(movies[i].title), ' ');
+            for (const auto &word: title) {
+                trie.insert(word, i);
+            }
+            auto description = splitString(toAlphabet(movies[i].plot_synopsis), ' ');
+            for (const auto &word: description) {
+                trie.insert(word, i);
+            }
+        }
+        cout << "Trie generated successfully.\n";
+    }
+
+    Trie getTrie() {
+        return trie;
+    }
+};
+Database* Database::instance = nullptr;
+
 
 
 #endif

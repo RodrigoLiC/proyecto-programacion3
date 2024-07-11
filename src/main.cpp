@@ -8,7 +8,40 @@
 
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
     load_data();
+    Database* db = Database::getInstance();
+    db->generateTrie();
+
+
+    string s = "";
+    while(s != "exit"){
+        cout << "Ingrese el string de la pelicula que desea buscar: ";
+        cin >> s;
+        vector<int> indexes = db->getTrie().getMovieIndices(s);
+
+        // imprimir primeros 10 resultados
+        for (int i = 0; i < 5 && i < indexes.size(); i++) {
+            db->getMovies()[indexes[i]].imprimirPreview();
+        }
+    }
+
+
     return 0;
 }
+
+
+
+//Trie trie;
+//trie.insert("bark", 1);
+//trie.insert("start", 2);
+//trie.insert("stark", 3);
+//trie.insert("story", 4);
+//trie.insert("artist", 5);
+//
+//string s = "";
+//while(s != "exit"){
+//cout << "Ingrese el string de la pelicula que desea buscar: ";
+//cin >> s;
+//trie.printMovieIndices(s);
+//}
+//
