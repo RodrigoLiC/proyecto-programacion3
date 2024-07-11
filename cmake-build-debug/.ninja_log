@@ -1,0 +1,27 @@
+# ninja log v5
+1	561	7422694445496191	CMakeFiles/proyecto_programacion3.dir/main.cpp.obj	95b7c70660cfce07
+365	454	7422731243047356	proyecto_programacion3.exe	c8cc8ba06b7e6019
+1	182	7423498045201787	build.ninja	f32054f8d6163dac
+3	364	7422731242186907	CMakeFiles/proyecto_programacion3.dir/src/main.cpp.obj	e7653276b86d4399
+3	846	7423504290857693	CMakeFiles/proyecto_programacion3.dir/src/main.cpp.obj	e7653276b86d4399
+847	1178	7423504294148017	proyecto_programacion3.exe	c8cc8ba06b7e6019
+2	492	7423505536227489	CMakeFiles/proyecto_programacion3.dir/src/main.cpp.obj	e7653276b86d4399
+493	596	7423505537217518	proyecto_programacion3.exe	c8cc8ba06b7e6019
+5	594	7423505935786306	CMakeFiles/proyecto_programacion3.dir/src/main.cpp.obj	e7653276b86d4399
+594	703	7423505936835934	proyecto_programacion3.exe	c8cc8ba06b7e6019
+4	468	7423507918974135	CMakeFiles/proyecto_programacion3.dir/src/main.cpp.obj	e7653276b86d4399
+468	568	7423507919923854	proyecto_programacion3.exe	c8cc8ba06b7e6019
+3	494	7423508155389195	CMakeFiles/proyecto_programacion3.dir/src/main.cpp.obj	e7653276b86d4399
+495	590	7423508156319282	proyecto_programacion3.exe	c8cc8ba06b7e6019
+3	1130	7424188043017223	CMakeFiles/proyecto_programacion3.dir/src/main.cpp.obj	e7653276b86d4399
+1131	1345	7424188045117004	proyecto_programacion3.exe	c8cc8ba06b7e6019
+17	796	7424188256343249	CMakeFiles/proyecto_programacion3.dir/src/main.cpp.obj	e7653276b86d4399
+797	906	7424188257423086	proyecto_programacion3.exe	c8cc8ba06b7e6019
+3	659	7424188318208262	CMakeFiles/proyecto_programacion3.dir/src/main.cpp.obj	e7653276b86d4399
+660	890	7424188320540167	proyecto_programacion3.exe	c8cc8ba06b7e6019
+7	847	7424189390278673	CMakeFiles/proyecto_programacion3.dir/src/main.cpp.obj	e7653276b86d4399
+848	1104	7424189392851073	proyecto_programacion3.exe	c8cc8ba06b7e6019
+4	952	7424190448604312	CMakeFiles/proyecto_programacion3.dir/src/main.cpp.obj	e7653276b86d4399
+953	1194	7424190451014766	proyecto_programacion3.exe	c8cc8ba06b7e6019
+3	1321	7424202953474096	CMakeFiles/proyecto_programacion3.dir/src/main.cpp.obj	e7653276b86d4399
+1321	1444	7424202954686867	proyecto_programacion3.exe	c8cc8ba06b7e6019

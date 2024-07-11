@@ -8,4 +8,5 @@ add_executable(proyecto_programacion3 src/main.cpp
         src/headers/database.h
         src/headers/search.h
         src/headers/ui.h
-        src/headers/utility.h)
+        src/headers/utility.h
+        src/headers/load.h)
