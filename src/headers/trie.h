@@ -4,13 +4,14 @@
 #include <iostream>
 #include <vector>
 #include <unordered_set>
+#include <mutex>
 
 using namespace std;
 
 struct TrieNode {
     TrieNode* childNode[26];
-    vector<int> movieIndices;
-    unordered_set<int> movieIndicesSet;
+    unordered_set<int> movieIndices;
+    mutex nodeMutex;
 
     TrieNode(){
         for(auto & i : childNode) {
@@ -39,21 +40,13 @@ public:
 
         for (char c : word) {
             int i = c - 'a';
+            lock_guard<mutex> lock(current->nodeMutex);
             if (current->childNode[i] == nullptr) {
                 current->childNode[i] = new TrieNode();
             }
             current = current->childNode[i];
 
-            // MAX SIZE
-            if (current->movieIndicesSet.size() > 100){
-                continue;
-            }
-            else {
-                if(current->movieIndicesSet.count(index) == 0){
-                    current->movieIndices.push_back(index);
-                    current->movieIndicesSet.insert(index);
-                }
-            }
+            current->movieIndices.insert(index);
         }
     }
 
@@ -74,10 +67,9 @@ public:
             current = current->childNode[i];
         }
 
-        vector<int> vec = current->movieIndices;
-        return vec;
+        vector<int> res(current->movieIndices.begin(), current->movieIndices.end());
+        return res;
     }
-
 };
 
 
