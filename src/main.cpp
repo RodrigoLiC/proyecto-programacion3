@@ -5,26 +5,46 @@
 #include "headers/ui.h"
 #include "headers/utility.h"
 #include "headers/load.h"
-
+#include "headers/mastarde.h"
 
 int main() {
     load_data();
     Database* db = Database::getInstance();
     db->generateTrie();
 
+    string opcion;
+    interfaz();
+    cin >> opcion;
 
-    string s = "";
-    while(s != "exit"){
-        cout << "Ingrese el string de la pelicula que desea buscar: ";
-        cin >> s;
-        vector<int> indexes = db->getTrie().getMovieIndices(s);
+    MasTarde<Movie> EnEspera;
 
-        // imprimir primeros 10 resultados
-        for (int i = 0; i < 5 && i < indexes.size(); i++) {
-            db->getMovies()[indexes[i]].imprimirPreview();
+    if (opcion == "1"){
+        string s = "";
+        string v = "";
+        while(s != "exit"){
+            cout << "Ingrese el string de la pelicula que desea buscar: ";
+            cin >> s;
+            if (s == "exit")
+                break;
+            vector<int> indexes = db->getTrie().getMovieIndices(s);
+
+            // imprimir primeros 10 resultados
+            for (int i = 0; i < 5 && i < indexes.size(); i++) {
+                db->getMovies()[indexes[i]].imprimirPreview();
+            }
+            cout << "Quisiera agregar alguna pelicula en Ver mas tarde? (y/n): ";
+            cin >> v;
+            if (v == "y"){
+                cout << "Escriba el titulo de la pelicula: ";
+            }
         }
     }
-
+    else if (opcion == "2"){ // Esto seria para donde se vean los me gusta
+        MisLikes();
+    }
+    else if (opcion == "3"){ // Y esto en ver mas tarde
+        VMT();
+    }
 
     return 0;
 }
