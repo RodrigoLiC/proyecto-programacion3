@@ -34,20 +34,7 @@ Este proyecto tiene como objetivo implementar una plataforma de streaming que pe
 1. **Clonar el repositorio:**
 
     ```bash
-    git clone https://github.com/usuario/repositorio.git
-    ```
-
-2. **Compilar el proyecto:**
-
-    ```bash
-    cd repositorio
-    make
-    ```
-
-3. **Ejecutar el programa:**
-
-    ```bash
-    ./programa
+    git clone [https://github.com/usuario/repositorio.git](https://github.com/RodrigoLiC/proyecto-programacion3.git)
     ```
 
 ## Uso
@@ -90,7 +77,7 @@ Para contribuir al proyecto:
 1. **Clonar el repositorio:**
 
     ```bash
-    git clone https://github.com/usuario/repositorio.git
+    git clone [https://github.com/usuario/repositorio.git](https://github.com/RodrigoLiC/proyecto-programacion3.git)
     ```
 
 2. **Crear una nueva rama:**
