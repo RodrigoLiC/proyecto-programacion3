@@ -93,16 +93,32 @@ public:
 
     void generateTrie() {
         cout << "Generating trie...\n";
+
+        for(int i = 0; i < movies.size(); i++){
+            auto title = splitString(toAlphabet(movies[i].title), ' ');
+            for (int j = 0; j < title[0].size(); j++) {
+                trie.insertPrefix(title[0].substr(j), i);
+            }
+        }
+
         for(int i = 0; i < movies.size(); i++){
             auto title = splitString(toAlphabet(movies[i].title), ' ');
             for (const auto &word: title) {
-                trie.insert(word, i);
-            }
-            auto description = splitString(toAlphabet(movies[i].plot_synopsis), ' ');
-            for (const auto &word: description) {
-                trie.insert(word, i);
+                for (int j = 0; j < word.size(); j++) {
+                    trie.insertPrefix(word.substr(j), i);
+                }
             }
         }
+
+        for(int i = 0; i < movies.size(); i++){
+            auto description = splitString(toAlphabet(movies[i].plot_synopsis), ' ');
+            for (const auto &word: description) {
+                for (int j = 0; j < word.size(); j++) {
+                    trie.insertPrefix(word.substr(j), i);
+                }
+            }
+        }
+
         cout << "Trie generated successfully.\n";
     }
 

@@ -12,6 +12,23 @@ int main() {
     Database* db = Database::getInstance();
     db->generateTrie();
 
+//    Trie trie;
+//    trie.insert("bark", 1);
+//    trie.insert("start", 2);
+//    trie.insert("stark", 3);
+//    trie.insert("story", 4);
+//    trie.insert("artist", 5);
+
+//    string s = "";
+//    while(s != "exit"){
+//        cout << "Ingrese el string de la pelicula que desea buscar: ";
+//        cin >> s;
+//        vector<int> a= trie.getMovieIndices(s);
+//        for (auto i : a){
+//            cout << i << endl;
+//        }
+//    }
+
 
     string s = "";
     while(s != "exit"){
@@ -31,17 +48,4 @@ int main() {
 
 
 
-//Trie trie;
-//trie.insert("bark", 1);
-//trie.insert("start", 2);
-//trie.insert("stark", 3);
-//trie.insert("story", 4);
-//trie.insert("artist", 5);
-//
-//string s = "";
-//while(s != "exit"){
-//cout << "Ingrese el string de la pelicula que desea buscar: ";
-//cin >> s;
-//trie.printMovieIndices(s);
-//}
-//
+

@@ -9,13 +9,18 @@ using namespace std;
 
 struct TrieNode {
     TrieNode* childNode[26];
-    unordered_set<int> movieIndices;
-    char value;
+    vector<int> movieIndices;
+    unordered_set<int> movieIndicesSet;
 
-    TrieNode(char value) : value(value){
+    TrieNode(){
+        for(auto & i : childNode) {
+            i = nullptr;
+        }
+    }
 
-        for (int i = 0; i < 26; i++) {
-            childNode[i] = NULL;
+    ~TrieNode(){
+        for(auto & i : childNode) {
+            delete i;
         }
     }
 };
@@ -26,15 +31,8 @@ private:
 
 public:
     Trie() {
-        root = new TrieNode(' ');
+        root = new TrieNode();
     }
-
-    void insert(const string& word, int index) {
-        for (int i = 0; i < word.size(); i++) {
-            insertPrefix(word.substr(i), index);
-        }
-    }
-
 
     void insertPrefix(const string& word, int index) {
         TrieNode* current = root;
@@ -42,10 +40,20 @@ public:
         for (char c : word) {
             int i = c - 'a';
             if (current->childNode[i] == nullptr) {
-                current->childNode[i] = new TrieNode(c);
+                current->childNode[i] = new TrieNode();
             }
             current = current->childNode[i];
-            current->movieIndices.insert(index);
+
+            // MAX SIZE
+            if (current->movieIndicesSet.size() > 100){
+                continue;
+            }
+            else {
+                if(current->movieIndicesSet.count(index) == 0){
+                    current->movieIndices.push_back(index);
+                    current->movieIndicesSet.insert(index);
+                }
+            }
         }
     }
 
@@ -59,15 +67,15 @@ public:
         for (char c : word) {
             int i = c - 'a';
             if (current->childNode[i] == nullptr) {
-                // If the path for the word does not exist in the Trie
                 cout << "No movies found for prefix: " << word << endl;
                 vector<int> indices;
                 return indices;
             }
             current = current->childNode[i];
         }
-        vector<int> indices(current->movieIndices.begin(), current->movieIndices.end());
-        return indices;
+
+        vector<int> vec = current->movieIndices;
+        return vec;
     }
 
 };
