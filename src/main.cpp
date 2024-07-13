@@ -1,37 +1,25 @@
 #include <iostream>
 #include "headers/database.h"
-#include "headers/search.h"
 #include "headers/trie.h"
-#include "headers/ui.h"
-#include "headers/utility.h"
 #include "headers/load.h"
-
+#include <fstream>
 
 int main() {
-    load_data();
     Database* db = Database::getInstance();
-    db->generateTrie();
+    string trieFile = "../datasets/trie_data.dat"; // Nombre del archivo donde se almacena el Trie
 
-//    Trie trie;
-//    trie.insert("bark", 1);
-//    trie.insert("start", 2);
-//    trie.insert("stark", 3);
-//    trie.insert("story", 4);
-//    trie.insert("artist", 5);
-
-//    string s = "";
-//    while(s != "exit"){
-//        cout << "Ingrese el string de la pelicula que desea buscar: ";
-//        cin >> s;
-//        vector<int> a= trie.getMovieIndices(s);
-//        for (auto i : a){
-//            cout << i << endl;
-//        }
-//    }
-
+    // Cargar datos y generar el Trie si no existe el archivo
+    ifstream infile(trieFile);
+    if (!infile.good()) { // Verifica si el archivo no existe o no es accesible
+        load_data(); // Cargar datos desde el CSV
+        db->generateTrie(); // Generar el Trie
+        db->saveTrieToFile(trieFile); // Guardar el Trie en el archivo
+    } else {
+        db->loadTrieFromFile(trieFile); // Cargar el Trie desde el archivo
+    }
 
     string s = "";
-    while(s != "exit"){
+    while (s != "exit") {
         cout << "Ingrese el string de la pelicula que desea buscar: ";
         cin >> s;
         vector<int> indexes = db->getTrie().getMovieIndices(s);
@@ -42,10 +30,5 @@ int main() {
         }
     }
 
-
     return 0;
 }
-
-
-
-
