@@ -3,7 +3,7 @@
 
 #include "trie.h"
 #include "utility.h"
-
+#include <fstream>
 
 /** Entidad que representa una película. @n
  * Estructura: @n@n
@@ -70,6 +70,7 @@ private:
     static Database* instance;
     Trie trie;
     Database(){};
+
 public:
     static Database* getInstance() {
         if (instance == nullptr) {
@@ -93,41 +94,45 @@ public:
 
     void generateTrie() {
         cout << "Generating trie...\n";
-
-        for(int i = 0; i < movies.size(); i++){
+        for (int i = 0; i < movies.size(); i++) {
             auto title = splitString(toAlphabet(movies[i].title), ' ');
             for (int j = 0; j < title[0].size(); j++) {
                 trie.insertPrefix(title[0].substr(j), i);
             }
         }
-
-        for(int i = 0; i < movies.size(); i++){
+        for (int i = 0; i < movies.size(); i++) {
             auto title = splitString(toAlphabet(movies[i].title), ' ');
-            for (const auto &word: title) {
+            for (const auto& word : title) {
                 for (int j = 0; j < word.size(); j++) {
                     trie.insertPrefix(word.substr(j), i);
                 }
             }
         }
-
-        for(int i = 0; i < movies.size(); i++){
+        for (int i = 0; i < movies.size(); i++) {
             auto description = splitString(toAlphabet(movies[i].plot_synopsis), ' ');
-            for (const auto &word: description) {
+            for (const auto& word : description) {
                 for (int j = 0; j < word.size(); j++) {
                     trie.insertPrefix(word.substr(j), i);
                 }
             }
         }
-
         cout << "Trie generated successfully.\n";
     }
 
     Trie getTrie() {
         return trie;
     }
-};
-Database* Database::instance = nullptr;
 
+    void saveTrieToFile(const string& filename) {
+        trie.saveTrie(filename);
+    }
+
+    void loadTrieFromFile(const string& filename) {
+        trie.loadTrie(filename);
+    }
+};
+
+Database* Database::instance = nullptr;
 
 
 #endif
