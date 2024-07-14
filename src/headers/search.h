@@ -22,7 +22,6 @@ vector<int> searchMovie(const string& input,Database* db){
     if (!searchIndexes.empty()) {
         // Start with the indices from the first word
         intersection = searchIndexes[0];
-
         // Find intersection with indices from subsequent words
         for (size_t i = 1; i < searchIndexes.size(); ++i) {
             vector<int> currentIndices = searchIndexes[i];
