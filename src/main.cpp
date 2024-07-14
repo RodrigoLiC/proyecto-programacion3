@@ -26,9 +26,12 @@ int main() {
 
     string s = "";
     while (s != "exit") {
-        cout << "\nIngrese el string de la pelicula que desea buscar: ";
-        cin >> s;
-        vector<int> indexes = db->getTrie().getMovieIndices(s);
+        string input;
+        cout << "\nIngrese parte de la pelicula que desea buscar: ";
+        getline(cin, input);
+
+        vector<int> indexes = searchMovie(input, db);
+
 
         if (indexes.empty()) {
             cout << "No movies found for the given prefix." << endl;
