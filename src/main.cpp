@@ -7,7 +7,7 @@
 
 int main() {
     Database* db = Database::getInstance();
-    string trieFile = "../datasets/trie_data.txt"; // Especifica la ruta del archivo
+    string trieFile = "../datasets/trie_data.txt";
 
     // Cargar datos y generar el Trie si no existe el archivo
     ifstream infile(trieFile);
@@ -17,6 +17,7 @@ int main() {
         db->generateTrie(); // Generar el Trie
         db->saveTrieToFile(trieFile); // Guardar el Trie en el archivo
     } else {
+        load_data();
         cout << "Loading trie from file..." << endl;
         db->loadTrieFromFile(trieFile); // Cargar el Trie desde el archivo
     }
@@ -26,6 +27,10 @@ int main() {
         cout << "Ingrese el string de la pelicula que desea buscar: ";
         cin >> s;
         vector<int> indexes = db->getTrie().getMovieIndices(s);
+
+        for (int index : indexes) {
+            cout << index << " ";
+        }
 
         if (indexes.empty()) {
             cout << "No movies found for the given prefix." << endl;

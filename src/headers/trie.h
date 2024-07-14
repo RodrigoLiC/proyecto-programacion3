@@ -57,7 +57,7 @@ public:
                 current->childNode[i] = new TrieNode();
             }
             current = current->childNode[i];
-            if (current->movieIndicesSet.size() > 100) {
+            if (current->movieIndicesSet.size() > 100000) {
                 continue;
             } else {
                 if (current->movieIndicesSet.count(index) == 0) {
