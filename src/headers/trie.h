@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <map>
+#include <mutex>
 
 using namespace std;
 
@@ -14,6 +15,7 @@ struct TrieNode {
     TrieNode* childNode[26];
     vector<int> movieIndices;
     unordered_set<int> movieIndicesSet;
+    mutex nodeMutex;
 
     TrieNode() {
         for (auto &i : childNode) {
@@ -51,8 +53,10 @@ public:
 
     void insertPrefix(const string& word, int index) {
         TrieNode* current = root;
+
         for (char c : word) {
             int i = c - 'a';
+            lock_guard<mutex> lock(current->nodeMutex);
             if (current->childNode[i] == nullptr) {
                 current->childNode[i] = new TrieNode();
             }
@@ -77,6 +81,7 @@ public:
         for (char c : word) {
             int i = c - 'a';
             if (current->childNode[i] == nullptr) {
+                cout << "No movies found for prefix: " << word << endl;
                 return vector<int>();
             }
             current = current->childNode[i];
@@ -131,4 +136,5 @@ public:
     }
 };
 
-#endif // PROYECTO_PROGRAMACION3_TRIE_H
+
+#endif

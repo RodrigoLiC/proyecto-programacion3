@@ -2,7 +2,10 @@
 #include <fstream>
 #include <string>
 #include "headers/database.h"
+#include "headers/search.h"
 #include "headers/trie.h"
+#include "headers/ui.h"
+#include "headers/utility.h"
 #include "headers/load.h"
 
 int main() {

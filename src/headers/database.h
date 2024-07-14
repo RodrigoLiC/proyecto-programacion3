@@ -1,6 +1,8 @@
 #ifndef PROYECTO_PROGRAMACION3_DATABASE_H
 #define PROYECTO_PROGRAMACION3_DATABASE_H
 
+#include <thread>
+
 #include "trie.h"
 #include "utility.h"
 #include <fstream>
@@ -92,35 +94,50 @@ public:
         return movies;
     }
 
-    void generateTrie() {
-        cout << "Generating trie...\n";
-        for (int i = 0; i < movies.size(); i++) {
-            auto title = splitString(toAlphabet(movies[i].title), ' ');
-            for (int j = 0; j < title[0].size(); j++) {
-                trie.insertPrefix(title[0].substr(j), i);
-            }
-        }
-        for (int i = 0; i < movies.size(); i++) {
-            auto title = splitString(toAlphabet(movies[i].title), ' ');
-            for (const auto& word : title) {
-                for (int j = 0; j < word.size(); j++) {
-                    trie.insertPrefix(word.substr(j), i);
-                }
-            }
-        }
-        for (int i = 0; i < movies.size(); i++) {
+    void processMovies(int start, int end) {
+        for (int i = start; i < end; ++i) {
             auto description = splitString(toAlphabet(movies[i].plot_synopsis), ' ');
-            for (const auto& word : description) {
+            auto title = splitString(toAlphabet(movies[i].title), ' ');
+            unordered_set<string> uniqueWords;
+
+            for (const auto &word: title) {
                 for (int j = 0; j < word.size(); j++) {
-                    trie.insertPrefix(word.substr(j), i);
+                    string prefix = word.substr(j);
+                    if (uniqueWords.count(prefix) == 0) {
+                        uniqueWords.insert(prefix);
+                        trie.insertPrefix(prefix, i);
+                    }
+                }
+            }
+
+            for (const auto &word: description) {
+                if (uniqueWords.count(word) == 0) {
+                    uniqueWords.insert(word);
+                    for (int j = 0; j < word.size(); j++) {
+                        string prefix = word.substr(j);
+                        trie.insertPrefix(prefix, i);
+                    }
                 }
             }
         }
-        cout << "Trie generated successfully.\n";
     }
 
-    Trie getTrie() {
-        return trie;
+    void generateTrie() {
+        int numThreads = thread::hardware_concurrency();
+        int chunkSize = movies.size() / numThreads;
+        vector<thread> threads;
+
+        cout << "Generating trie using " << numThreads << " threads...\n";
+
+        for (int i = 0; i < numThreads; ++i) {
+            int start = i * chunkSize;
+            int end = (i == numThreads - 1) ? movies.size() : start + chunkSize;
+            threads.emplace_back(&Database::processMovies, this, start, end);
+        }
+
+        for (auto &t: threads) {
+            t.join();
+        }
     }
 
     void saveTrieToFile(const string& filename) {
@@ -129,6 +146,10 @@ public:
 
     void loadTrieFromFile(const string& filename) {
         trie.loadTrie(filename);
+    }
+
+    Trie getTrie() {
+        return trie;
     }
 };
 
