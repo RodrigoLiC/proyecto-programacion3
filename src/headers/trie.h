@@ -7,7 +7,6 @@
 #include <fstream>
 #include <sstream>
 #include <map>
-#include <mutex>
 
 using namespace std;
 
@@ -15,7 +14,6 @@ struct TrieNode {
     TrieNode* childNode[26];
     vector<int> movieIndices;
     unordered_set<int> movieIndicesSet;
-    mutex nodeMutex;
 
     TrieNode() {
         for (auto &i : childNode) {
@@ -53,15 +51,13 @@ public:
 
     void insertPrefix(const string& word, int index) {
         TrieNode* current = root;
-
         for (char c : word) {
             int i = c - 'a';
-            lock_guard<mutex> lock(current->nodeMutex);
             if (current->childNode[i] == nullptr) {
                 current->childNode[i] = new TrieNode();
             }
             current = current->childNode[i];
-            if (current->movieIndicesSet.size() > 100000) {
+            if (current->movieIndicesSet.size() > 100) {
                 continue;
             } else {
                 if (current->movieIndicesSet.count(index) == 0) {
@@ -81,7 +77,6 @@ public:
         for (char c : word) {
             int i = c - 'a';
             if (current->childNode[i] == nullptr) {
-                cout << "No movies found for prefix: " << word << endl;
                 return vector<int>();
             }
             current = current->childNode[i];
@@ -107,7 +102,7 @@ public:
                     file << ",";
                 }
             }
-            file << "\n";
+            file << ";";
         }
         file.close();
     }
@@ -120,7 +115,7 @@ public:
         }
 
         string line;
-        while (getline(file, line)) {
+        while (getline(file, line, ';')) {
             if (line.empty()) continue;
             size_t pos = line.find('<');
             string word = line.substr(0, pos);
@@ -136,5 +131,4 @@ public:
     }
 };
 
-
-#endif
+#endif // PROYECTO_PROGRAMACION3_TRIE_H
