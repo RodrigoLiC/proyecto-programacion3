@@ -12,7 +12,7 @@
 using namespace std;
 
 struct TrieNode {
-    TrieNode* childNode[26];
+    TrieNode* childNode[26] = { nullptr };;
     vector<int> movieIndices;
     unordered_set<int> movieIndicesSet;
     mutex nodeMutex;
@@ -78,13 +78,14 @@ public:
 
         for (char c : word) {
             int i = c - 'a';
+            lock_guard<mutex> lock(current->nodeMutex);
             if (current->childNode[i] == nullptr) {
                 current->childNode[i] = new TrieNode();
             }
             current = current->childNode[i];
         }
-        lock_guard<mutex> lock(current->nodeMutex);
-        if (current->movieIndicesSet.size() <= 100000) {
+        {
+            lock_guard<mutex> lock(current->nodeMutex);
             if (current->movieIndicesSet.count(index) == 0) {
                 current->movieIndices.push_back(index);
                 current->movieIndicesSet.insert(index);

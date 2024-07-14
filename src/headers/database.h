@@ -101,22 +101,22 @@ public:
     }
 
 
-//    void processWordIsBeginingOfTitle(int start, int end) {
-//        for (int i = start; i < end; ++i) {
-//            vector<string> title = splitString(toAlphabet(movies[i].title), ' ');
-//            trie.insertWord(title[0], i);
-//        }
-//        cout<< "Processing titles...\n";
-//    }
-//
-//    void processWordIsTitle(int start, int end) {
-//        for (int i = start; i < end; ++i) {
-//            vector<string> title = splitString(toAlphabet(movies[i].title), ' ');
-//            for (const auto &word: title) {
-//                trie.insertWord(word, i);;
-//            }
-//        }
-//    }
+    void processWordIsBeginingOfTitle(int start, int end) {
+        for (int i = start; i < end; ++i) {
+            vector<string> title = splitString(toAlphabet(movies[i].title), ' ');
+            trie.insertWord(title[0], i);
+        }
+    }
+
+    void processWordIsTitle(int start, int end) {
+        for (int i = start; i < end; ++i) {
+            vector<string> title = splitString(toAlphabet(movies[i].title), ' ');
+            for (const auto &word: title) {
+                trie.insertWord(word, i);;
+            }
+        }
+        cout<< "Processing titles...\n";
+    }
 
     void processFirstWordInTitle(int start, int end) {
         for (int i = start; i < end; ++i) {
@@ -174,24 +174,27 @@ public:
         int chunkSize = movies.size() / numThreads;
         vector<thread> threads;
 
+        threads.clear();
         cout << "Generating trie using " << numThreads << " threads...\n";
-//        cout << "Titles -2/3\n";
-//        for (int i = 0; i < numThreads; ++i) {
-//            int start = i * chunkSize;
-//            int end = (i == numThreads - 1) ? movies.size() : start + chunkSize;
-//            threads.emplace_back(&Database::processWordIsBeginingOfTitle, this, start, end);
-//        }
-//        for (auto &t: threads) {t.join();}
-//        cout << "Titles -1/3\n";
-//
-//        for (int i = 0; i < numThreads; ++i) {
-//            int start = i * chunkSize;
-//            int end = (i == numThreads - 1) ? movies.size() : start + chunkSize;
-//            threads.emplace_back(&Database::processWordIsTitle, this, start, end);
-//        }
-//        for (auto &t: threads) {t.join();}
+        cout << "Titles -2/3\n";
+        for (int i = 0; i < numThreads; ++i) {
+            int start = i * chunkSize;
+            int end = (i == numThreads - 1) ? movies.size() : start + chunkSize;
+            threads.emplace_back(&Database::processWordIsBeginingOfTitle, this, start, end);
+        }
+        for (auto &t: threads) {t.join();}
+        cout << "Titles -1/3\n";
+
+        threads.clear();
+        for (int i = 0; i < numThreads; ++i) {
+            int start = i * chunkSize;
+            int end = (i == numThreads - 1) ? movies.size() : start + chunkSize;
+            threads.emplace_back(&Database::processWordIsTitle, this, start, end);
+        }
+        for (auto &t: threads) {t.join();}
         cout << "Titles 0/3\n";
 
+        threads.clear();
         for (int i = 0; i < numThreads; ++i) {
             int start = i * chunkSize;
             int end = (i == numThreads - 1) ? movies.size() : start + chunkSize;
