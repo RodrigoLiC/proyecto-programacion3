@@ -31,10 +31,6 @@ int main() {
         cin >> s;
         vector<int> indexes = db->getTrie().getMovieIndices(s);
 
-        for (int index : indexes) {
-            cout << index << " ";
-        }
-
         if (indexes.empty()) {
             cout << "No movies found for the given prefix." << endl;
         } else {

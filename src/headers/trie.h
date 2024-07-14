@@ -51,6 +51,7 @@ public:
         root = new TrieNode();
     }
 
+    /* Insert a word into the Trie */
     void insertPrefix(const string& word, int index) {
         TrieNode* current = root;
 
@@ -68,6 +69,25 @@ public:
                     current->movieIndices.push_back(index);
                     current->movieIndicesSet.insert(index);
                 }
+            }
+        }
+    }
+
+    void insertWord(const string& word, int index) {
+        TrieNode* current = root;
+
+        for (char c : word) {
+            int i = c - 'a';
+            if (current->childNode[i] == nullptr) {
+                current->childNode[i] = new TrieNode();
+            }
+            current = current->childNode[i];
+        }
+        lock_guard<mutex> lock(current->nodeMutex);
+        if (current->movieIndicesSet.size() <= 100000) {
+            if (current->movieIndicesSet.count(index) == 0) {
+                current->movieIndices.push_back(index);
+                current->movieIndicesSet.insert(index);
             }
         }
     }

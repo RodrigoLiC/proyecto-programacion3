@@ -65,7 +65,13 @@ public:
     }
 };
 
-// Singleton
+
+/** Clase que representa la base de datos de películas. @n
+ * Estructura: @n@n
+ * - movies: Vector de películas. @n@n
+ * - instance: Instancia de la base de datos. @n@n
+ * - trie: Trie que almacena las palabras de las sinopsis y títulos de las películas.
+ * **/
 class Database {
 private:
     vector<Movie> movies;
@@ -94,10 +100,44 @@ public:
         return movies;
     }
 
-    void processMovies(int start, int end) {
+
+//    void processWordIsBeginingOfTitle(int start, int end) {
+//        for (int i = start; i < end; ++i) {
+//            vector<string> title = splitString(toAlphabet(movies[i].title), ' ');
+//            trie.insertWord(title[0], i);
+//        }
+//        cout<< "Processing titles...\n";
+//    }
+//
+//    void processWordIsTitle(int start, int end) {
+//        for (int i = start; i < end; ++i) {
+//            vector<string> title = splitString(toAlphabet(movies[i].title), ' ');
+//            for (const auto &word: title) {
+//                trie.insertWord(word, i);;
+//            }
+//        }
+//    }
+
+    void processFirstWordInTitle(int start, int end) {
         for (int i = start; i < end; ++i) {
-            auto description = splitString(toAlphabet(movies[i].plot_synopsis), ' ');
-            auto title = splitString(toAlphabet(movies[i].title), ' ');
+            vector<string> title = splitString(toAlphabet(movies[i].title), ' ');
+            trie.insertPrefix(title[0], i);
+        }
+    }
+
+    void processWordInTitle(int start, int end) {
+        for (int i = start; i < end; ++i) {
+            vector<string> title = splitString(toAlphabet(movies[i].title), ' ');
+
+            for (const auto &word: title) {
+                trie.insertPrefix(word, i);
+            }
+        }
+    }
+
+    void processSubwordInTitle(int start, int end) {
+        for (int i = start; i < end; ++i) {
+            vector<string> title = splitString(toAlphabet(movies[i].title), ' ');
             unordered_set<string> uniqueWords;
 
             for (const auto &word: title) {
@@ -109,6 +149,13 @@ public:
                     }
                 }
             }
+        }
+    }
+
+    void processSubwordInDescription(int start, int end) {
+        for (int i = start; i < end; ++i) {
+            auto description = splitString(toAlphabet(movies[i].plot_synopsis), ' ');
+            unordered_set<string> uniqueWords;
 
             for (const auto &word: description) {
                 if (uniqueWords.count(word) == 0) {
@@ -128,16 +175,58 @@ public:
         vector<thread> threads;
 
         cout << "Generating trie using " << numThreads << " threads...\n";
+//        cout << "Titles -2/3\n";
+//        for (int i = 0; i < numThreads; ++i) {
+//            int start = i * chunkSize;
+//            int end = (i == numThreads - 1) ? movies.size() : start + chunkSize;
+//            threads.emplace_back(&Database::processWordIsBeginingOfTitle, this, start, end);
+//        }
+//        for (auto &t: threads) {t.join();}
+//        cout << "Titles -1/3\n";
+//
+//        for (int i = 0; i < numThreads; ++i) {
+//            int start = i * chunkSize;
+//            int end = (i == numThreads - 1) ? movies.size() : start + chunkSize;
+//            threads.emplace_back(&Database::processWordIsTitle, this, start, end);
+//        }
+//        for (auto &t: threads) {t.join();}
+        cout << "Titles 0/3\n";
 
         for (int i = 0; i < numThreads; ++i) {
             int start = i * chunkSize;
             int end = (i == numThreads - 1) ? movies.size() : start + chunkSize;
-            threads.emplace_back(&Database::processMovies, this, start, end);
+            threads.emplace_back(&Database::processFirstWordInTitle, this, start, end);
         }
+        for (auto &t: threads) {t.join();}
+        cout << "Titles 1/3\n";
 
-        for (auto &t: threads) {
-            t.join();
+        threads.clear();
+        for (int i = 0; i < numThreads; ++i) {
+            int start = i * chunkSize;
+            int end = (i == numThreads - 1) ? movies.size() : start + chunkSize;
+            threads.emplace_back(&Database::processWordInTitle, this, start, end);
         }
+        for (auto &t: threads) {t.join();}
+        cout << "Titles 2/3\n";
+
+        threads.clear();
+        for (int i = 0; i < numThreads; ++i) {
+            int start = i * chunkSize;
+            int end = (i == numThreads - 1) ? movies.size() : start + chunkSize;
+            threads.emplace_back(&Database::processSubwordInTitle, this, start, end);
+        }
+        for (auto &t: threads) {t.join();}
+        cout << "Titles 3/3\n";
+
+        threads.clear();
+        cout << "Generating Description...\n";
+        for (int i = 0; i < numThreads; ++i) {
+            int start = i * chunkSize;
+            int end = (i == numThreads - 1) ? movies.size() : start + chunkSize;
+            threads.emplace_back(&Database::processSubwordInDescription, this, start, end);
+        }
+        for (auto &t: threads) {t.join();}
+        cout << "Description generated\n";
     }
 
     void saveTrieToFile(const string& filename) {
