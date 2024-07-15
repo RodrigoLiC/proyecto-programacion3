@@ -5,6 +5,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 std::string toAlphabet(const std::string& word) {
     std::string result;
@@ -29,6 +30,25 @@ std::vector<std::string> splitString(const std::string& str, char delimiter) {
         substrings.push_back(substring);
     }
     return substrings;
+}
+
+std::vector<std::string> trimLeadingSpaces(const std::vector<std::string>& vec) {
+    std::vector<std::string> trimmedVec;
+
+    // Function lambda to trim leading spaces of a string
+    auto trimLeft = [](const std::string& s) -> std::string {
+        auto it = std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+            return !std::isspace(ch);
+        });
+        return std::string(it, s.end());
+    };
+
+    // Apply the trimLeft lambda to each string in the original vector
+    for (const auto& str : vec) {
+        trimmedVec.push_back(trimLeft(str));
+    }
+
+    return trimmedVec;
 }
 
 #endif

@@ -1,4 +1,4 @@
-//src/headers/search.h
+// src/headers/search.h
 #ifndef PROYECTO_PROGRAMACION3_SEARCH_H
 #define PROYECTO_PROGRAMACION3_SEARCH_H
 
@@ -39,6 +39,29 @@ public:
             }
         }
         return intersection;
+    }
+};
+
+class TagSearchCommand : public SearchCommand {
+public:
+    std::vector<int> execute(const std::string& input, Database* db) override {
+        std::vector<int> indices;
+        std::cout << "Searching for tag: " << input << std::endl;
+        for (int i = 0; i < db->getMovies().size(); ++i) {
+            std::vector<std::string> movieTags = db->getMovies()[i].tags;
+            for (const auto& tag : movieTags) {
+                if (tag == input) {
+                    indices.push_back(i);
+                    std::cout << "Found \n";
+                    break;
+                }
+            }
+            if (indices.size() > 20) {
+                break;
+            }
+        }
+        std::cout << "Searched";
+        return indices;
     }
 };
 

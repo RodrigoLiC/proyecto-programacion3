@@ -132,6 +132,8 @@ public:
         }
 
         std::string line;
+        int count = 0;
+        std::cout << "Words loaded (chunks of 50k):\n";
         while (getline(file, line)) {
             if (line.empty()) continue;
             size_t pos = line.find('<');
@@ -141,7 +143,11 @@ public:
             std::string indexStr;
             while (getline(ss, indexStr, ',')) {
                 int index = std::stoi(indexStr);
-                insertPrefix(word, index);
+                insertWord(word, index);
+            }
+            count++;
+            if (count % 50000 == 0) {
+                std::cout << "|";
             }
         }
         file.close();

@@ -10,5 +10,4 @@ add_executable(proyecto_programacion3 src/main.cpp
         src/headers/ui.h
         src/headers/utility.h
         src/headers/load.h
-        src/headers/movie_factory.h
         src/headers/movie.h)
