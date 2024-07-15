@@ -1,3 +1,4 @@
+//src/main.cpp
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -10,37 +11,36 @@
 
 int main() {
     Database* db = Database::getInstance();
-    string trieFile = "../datasets/trie_data.txt";
+    std::string trieFile = "../datasets/trie_data.txt";
 
-    ifstream infile(trieFile);
-    if (!infile.good()) { // Verifica si el archivo no existe o no es accesible
-        cout << "No existing trie file found. Loading data and generating trie..." << endl;
-        load_data(); // Cargar datos desde el CSV
-        db->generateTrie(); // Generar el Trie
-        db->saveTrieToFile(trieFile); // Guardar el Trie en el archivo
+    std::ifstream infile(trieFile);
+    if (!infile.good()) {
+        std::cout << "No existing trie file found. Loading data and generating trie..." << std::endl;
+        load_data();
+        db->generateTrie();
+        db->saveTrieToFile(trieFile);
     } else {
         load_data();
-        cout << "Loading trie from file..." << endl;
-        db->loadTrieFromFile(trieFile); // Cargar el Trie desde el archivo
+        std::cout << "Loading trie from file..." << std::endl;
+        db->loadTrieFromFile(trieFile);
     }
 
-    string s = "";
+    std::string s;
+    MovieSearchCommand searchCommand;
     while (s != "exit") {
-        string input;
-        cout << "\nIngrese parte de la pelicula que desea buscar: ";
-        getline(cin, input);
+        std::string input;
+        std::cout << "\nIngrese parte de la pelicula que desea buscar: ";
+        getline(std::cin, input);
 
-        vector<int> indexes = searchMovie(input, db);
-
+        std::vector<int> indexes = searchCommand.execute(input, db);
 
         if (indexes.empty()) {
-            cout << "No movies found for the given prefix." << endl;
+            std::cout << "No movies found for the given prefix." << std::endl;
         } else {
-            // imprimir primeros 5 resultados
             for (int i = 0; i < 5 && i < indexes.size(); i++) {
                 db->getMovies()[indexes[i]].imprimirPreview();
             }
-            cout << "\n\n";
+            std::cout << "\n\n";
         }
     }
 

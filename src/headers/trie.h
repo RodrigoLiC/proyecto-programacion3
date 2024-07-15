@@ -1,7 +1,7 @@
+//src/headers/trie.h
 #ifndef PROYECTO_PROGRAMACION3_TRIE_H
 #define PROYECTO_PROGRAMACION3_TRIE_H
 
-#include <iostream>
 #include <vector>
 #include <unordered_set>
 #include <fstream>
@@ -9,13 +9,11 @@
 #include <map>
 #include <mutex>
 
-using namespace std;
-
 struct TrieNode {
-    TrieNode* childNode[26] = { nullptr };;
-    vector<int> movieIndices;
-    unordered_set<int> movieIndicesSet;
-    mutex nodeMutex;
+    TrieNode* childNode[26]{};
+    std::vector<int> movieIndices;
+    std::unordered_set<int> movieIndicesSet;
+    std::mutex nodeMutex;
 
     TrieNode() {
         for (auto &i : childNode) {
@@ -34,7 +32,7 @@ class Trie {
 private:
     TrieNode* root;
 
-    void collectWords(TrieNode* node, string word, map<string, vector<int>>& wordMap) {
+    void collectWords(TrieNode* node, const std::string& word, std::map<std::string, std::vector<int>>& wordMap) {
         if (!node) return;
         if (!node->movieIndices.empty()) {
             wordMap[word] = node->movieIndices;
@@ -47,17 +45,13 @@ private:
     }
 
 public:
-    Trie() {
-        root = new TrieNode();
-    }
+    Trie() : root(new TrieNode()) {}
 
-    /* Insert a word into the Trie */
-    void insertPrefix(const string& word, int index) {
+    void insertPrefix(const std::string& word, int index) {
         TrieNode* current = root;
-
         for (char c : word) {
             int i = c - 'a';
-            lock_guard<mutex> lock(current->nodeMutex);
+            std::lock_guard<std::mutex> lock(current->nodeMutex);
             if (current->childNode[i] == nullptr) {
                 current->childNode[i] = new TrieNode();
             }
@@ -73,51 +67,48 @@ public:
         }
     }
 
-    void insertWord(const string& word, int index) {
+    void insertWord(const std::string& word, int index) {
         TrieNode* current = root;
-
         for (char c : word) {
             int i = c - 'a';
-            lock_guard<mutex> lock(current->nodeMutex);
+            std::lock_guard<std::mutex> lock(current->nodeMutex);
             if (current->childNode[i] == nullptr) {
                 current->childNode[i] = new TrieNode();
             }
             current = current->childNode[i];
         }
-        {
-            lock_guard<mutex> lock(current->nodeMutex);
-            if (current->movieIndicesSet.count(index) == 0) {
-                current->movieIndices.push_back(index);
-                current->movieIndicesSet.insert(index);
-            }
+        std::lock_guard<std::mutex> lock(current->nodeMutex);
+        if (current->movieIndicesSet.count(index) == 0) {
+            current->movieIndices.push_back(index);
+            current->movieIndicesSet.insert(index);
         }
     }
 
-    TrieNode* getRoot() {
+    TrieNode* getRoot() const {
         return root;
     }
 
-    vector<int> getMovieIndices(const string& word) {
+    std::vector<int> getMovieIndices(const std::string& word) const {
         TrieNode* current = root;
         for (char c : word) {
             int i = c - 'a';
             if (current->childNode[i] == nullptr) {
-                cout << "No movies found for prefix: " << word << endl;
-                return vector<int>();
+                std::cout << "No movies found for prefix: " << word << std::endl;
+                return std::vector<int>();
             }
             current = current->childNode[i];
         }
         return current->movieIndices;
     }
 
-    void saveTrie(const string& filename) {
-        ofstream file(filename);
+    void saveTrie(const std::string& filename) {
+        std::ofstream file(filename);
         if (!file.is_open()) {
-            cerr << "Failed to open file for saving Trie." << endl;
+            std::cerr << "Failed to open file for saving Trie." << std::endl;
             return;
         }
 
-        map<string, vector<int>> wordMap;
+        std::map<std::string, std::vector<int>> wordMap;
         collectWords(root, "", wordMap);
 
         for (const auto& pair : wordMap) {
@@ -133,29 +124,28 @@ public:
         file.close();
     }
 
-    void loadTrie(const string& filename) {
-        ifstream file(filename);
+    void loadTrie(const std::string& filename) {
+        std::ifstream file(filename);
         if (!file.is_open()) {
-            cerr << "Failed to open file for loading Trie." << endl;
+            std::cerr << "Failed to open file for loading Trie." << std::endl;
             return;
         }
 
-        string line;
+        std::string line;
         while (getline(file, line)) {
             if (line.empty()) continue;
             size_t pos = line.find('<');
-            string word = line.substr(0, pos);
-            string indicesStr = line.substr(pos + 1);
-            stringstream ss(indicesStr);
-            string indexStr;
+            std::string word = line.substr(0, pos);
+            std::string indicesStr = line.substr(pos + 1);
+            std::stringstream ss(indicesStr);
+            std::string indexStr;
             while (getline(ss, indexStr, ',')) {
-                int index = stoi(indexStr);
+                int index = std::stoi(indexStr);
                 insertPrefix(word, index);
             }
         }
         file.close();
     }
 };
-
 
 #endif
