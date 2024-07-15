@@ -38,7 +38,7 @@ int main() {
             std::cout << "No movies found for the given prefix." << std::endl;
         } else {
             for (int i = 0; i < 5 && i < indexes.size(); i++) {
-                db->getMovies()[indexes[i]].imprimirPreview();
+                MovieFactory::displayMovie(MovieFactory::PREVIEW, db->getMovies()[indexes[i]]);
             }
             std::cout << "\n\n";
         }
