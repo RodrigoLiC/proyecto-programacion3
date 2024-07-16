@@ -158,6 +158,10 @@ Para contribuir al proyecto:
 
 5. **Crear un Pull Request en GitHub.**
 
+## Link del drive para el video
+
+- https://drive.google.com/drive/folders/1HY764AmKmiB6IHGk1IzCDRlWQaPwVdJG
+
 ## Fuentes Utilizadas
 
 1. Gonzales Gonzales, C. E. (2020). Trabajo de investigación una revisión de los patrones de diseño de software aplicado a las aplicaciones web. Recuperado de https://repositorio.uss.edu.pe/handle/20.500.12802/6783
@@ -166,4 +170,4 @@ Para contribuir al proyecto:
 
 3. García Diaz, B. L. (2021). Diseño de software para el uso de estructuras dinámicas con lenguaje de programación C++. Recuperado de: https://hdl.handle.net/20.500.12952/5748
 
-4. Montenegro Salcedo, L. E., & Alvarado Nieto, L. D. (2015). Técnica para solución de recurrencias, usada en el análisis de la complejidad de algoritmos recursivos. Tecnura, 19(SPE), 89-97. Recuperado de:https://doi.org/10.14483/udistrital.jour.tecnura.2015.3.a07  
+4. de Campos, L. M., Fernández-Luna, J. M., Huete, J. F., & Rueda-Morales, M. A. (2011). USO DE CONOCIMIENTO ESTRUCTURADO EN UN SISTEMA DE RECOMENDACIÓN BASADO EN CONTENIDO. Departamento de Ciencias de la computacón e Inteligencia Artificial, Universidad de Granada, Granada, España.
