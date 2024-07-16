@@ -67,6 +67,11 @@ Este proyecto tiene como propósito desarrollar una plataforma de streaming que 
 - Esta clase interactúa con la base de datos de películas para recuperar y mostrar la información relevante de las películas guardadas por el usuario.
 8. **Movie.h:**
 - El archivo movie.h define la estructura de una película (Movie) y las clases necesarias para visualizar las películas de diferentes maneras.
+- Movie: Representa una película con sus detalles.
+- DisplayMovie: Clase base abstracta para la visualización de películas.
+- FullDisplayMovie: Implementa la visualización completa de una película.
+- PreviewDisplayMovie: Implementa la visualización previa de una película.
+- MovieFactory: Proporciona un método para crear y mostrar objetos DisplayMovie basados en el tipo de visualización.
 9. **Main.cpp:**
 - Archivo en dónde se ejecuta todo el código. Se hace llamado a los headers.
 ## Instalación
@@ -159,6 +164,6 @@ Para contribuir al proyecto:
 
 2. Ruano, D., & Herrera, N. E. (2014). Representación secuencial de un trie de sufijos. In XX Congreso Argentino de Ciencias de la Computación (Buenos Aires, 2014). Recuperado de: https://sedici.unlp.edu.ar/handle/10915/42291
 
-3. Fuente 3
+3. García Diaz, B. L. (2021). Diseño de software para el uso de estructuras dinámicas con lenguaje de programación C++. Recuperado de: https://hdl.handle.net/20.500.12952/5748
 
-4. Fuente 4
+4. Montenegro Salcedo, L. E., & Alvarado Nieto, L. D. (2015). Técnica para solución de recurrencias, usada en el análisis de la complejidad de algoritmos recursivos. Tecnura, 19(SPE), 89-97. Recuperado de:https://doi.org/10.14483/udistrital.jour.tecnura.2015.3.a07  
