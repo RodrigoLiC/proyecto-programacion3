@@ -19,31 +19,31 @@ public:
 // Selection Menu Class
 class MovieSelectionMenu : public Menu {
 private:
-    std::vector<int> indexes;
+    vector<int> indexes;
     int page = 0;
 
 public:
-    MovieSelectionMenu(const std::vector<int>& idx) : indexes(idx) {}
+    MovieSelectionMenu(const vector<int>& idx) : indexes(idx) {}
 
     void display() override {
         Database* db = Database::getInstance();
         int start = page * 5;
         int end = start + 5;
         for (int i = start; i < end && i < indexes.size(); ++i) {
-            std::cout << i + 1 << ". ";
+            cout << i + 1 << ". ";
             MovieFactory::displayMovie(MovieFactory::PREVIEW, db->getMovies()[indexes[i]]);
         }
 
-        std::cout << "\nOptions:\n";
-        std::cout << "1. Select Movie\n";
+        cout << "\nOptions:\n";
+        cout << "1. Select Movie\n";
         if (end < indexes.size()) {
-            std::cout << "2. See Next 5 Movies\n";
+            cout << "2. See Next 5 Movies\n";
         }
         if (page > 0) {
-            std::cout << "3. See Previous 5 Movies\n";
+            cout << "3. See Previous 5 Movies\n";
         }
-        std::cout << "4. Return to Main Menu\n";
-        std::cout << "Enter your choice: ";
+        cout << "4. Return to Main Menu\n";
+        cout << "Enter your choice: ";
     }
 
     void handleInput(User& user, Database* db) override {
@@ -53,36 +53,36 @@ public:
 
             int choice;
             while (true) {
-                std::string input;
-                std::getline(std::cin, input);
+                string input;
+                getline(cin, input);
                 try {
-                    choice = std::stoi(input);
+                    choice = stoi(input);
                     if (choice >= 1 && choice <= 4) {
                         break;
                     } else {
-                        std::cout << "Invalid choice. Please try again: ";
+                        cout << "Invalid choice. Please try again: ";
                     }
-                } catch (const std::invalid_argument&) {
-                    std::cout << "Invalid choice. Please try again: ";
+                } catch (const invalid_argument&) {
+                    cout << "Invalid choice. Please try again: ";
                 }
             }
 
             switch (choice) {
                 case 1: {
-                    std::cout << "Enter the number of the movie to select: ";
+                    cout << "Enter the number of the movie to select: ";
                     int movieChoice;
                     while (true) {
-                        std::string input;
-                        std::getline(std::cin, input);
+                        string input;
+                        getline(cin, input);
                         try {
-                            movieChoice = std::stoi(input);
+                            movieChoice = stoi(input);
                             if (movieChoice > 0 && movieChoice <= 5 && (page * 5 + movieChoice - 1) < indexes.size()) {
                                 break;
                             } else {
-                                std::cout << "Invalid choice. Please try again: ";
+                                cout << "Invalid choice. Please try again: ";
                             }
-                        } catch (const std::invalid_argument&) {
-                            std::cout << "Invalid choice. Please try again: ";
+                        } catch (const invalid_argument&) {
+                            cout << "Invalid choice. Please try again: ";
                         }
                     }
 
@@ -90,20 +90,20 @@ public:
                     MovieFactory::displayMovie(MovieFactory::FULL, db->getMovies()[movieIndex]);
 
                     int userChoice;
-                    std::cout << "Options:\n1. Like\n2. Watch Later\n3. Return to Search\n4. Return to Main Menu\n";
-                    std::cout << "Enter your choice: ";
+                    cout << "Options:\n1. Like\n2. Watch Later\n3. Return to Search\n4. Return to Main Menu\n";
+                    cout << "Enter your choice: ";
                     while (true) {
-                        std::string input;
-                        std::getline(std::cin, input);
+                        string input;
+                        getline(cin, input);
                         try {
-                            userChoice = std::stoi(input);
+                            userChoice = stoi(input);
                             if (userChoice >= 1 && userChoice <= 4) {
                                 break;
                             } else {
-                                std::cout << "Invalid choice. Please try again: ";
+                                cout << "Invalid choice. Please try again: ";
                             }
-                        } catch (const std::invalid_argument&) {
-                            std::cout << "Invalid choice. Please try again: ";
+                        } catch (const invalid_argument&) {
+                            cout << "Invalid choice. Please try again: ";
                         }
                     }
 
@@ -141,25 +141,25 @@ public:
             case 3:
                 return true;
             default:
-                std::cout << "Invalid choice. Returning to search...\n";
+                cout << "Invalid choice. Returning to search...\n";
                 return false;
         }
 
         int nextChoice;
-        std::cout << "Options:\n1. Continue Searching\n2. Return to Main Menu\n";
-        std::cout << "Enter your choice: ";
+        cout << "Options:\n1. Continue Searching\n2. Return to Main Menu\n";
+        cout << "Enter your choice: ";
         while (true) {
-            std::string input;
-            std::getline(std::cin, input);
+            string input;
+            getline(cin, input);
             try {
-                nextChoice = std::stoi(input);
+                nextChoice = stoi(input);
                 if (nextChoice == 1 || nextChoice == 2) {
                     break;
                 } else {
-                    std::cout << "Invalid choice. Please try again: ";
+                    cout << "Invalid choice. Please try again: ";
                 }
-            } catch (const std::invalid_argument&) {
-                std::cout << "Invalid choice. Please try again: ";
+            } catch (const invalid_argument&) {
+                cout << "Invalid choice. Please try again: ";
             }
         }
 
@@ -173,41 +173,41 @@ public:
 class MovieSearchMenu : public Menu {
 public:
     void display() override {
-        std::cout << "\nSearch:\n";
-        std::cout << "1. Search by word\n";
-        std::cout << "2. Search by tags\n";
-        std::cout << "3. Back to main menu\n";
-        std::cout << "Enter your choice: ";
+        cout << "\nSearch:\n";
+        cout << "1. Search by word\n";
+        cout << "2. Search by tags\n";
+        cout << "3. Back to main menu\n";
+        cout << "Enter your choice: ";
     }
 
     void handleInput(User& user, Database* db) override {
         int option;
         while (true) {
-            std::string input;
-            std::getline(std::cin, input);
+            string input;
+            getline(cin, input);
             try {
-                option = std::stoi(input);
+                option = stoi(input);
                 if (option >= 1 && option <= 3) {
                     break;
                 } else {
-                    std::cout << "Invalid choice. Please try again: ";
+                    cout << "Invalid choice. Please try again: ";
                 }
-            } catch (const std::invalid_argument&) {
-                std::cout << "Invalid choice. Please try again: ";
+            } catch (const invalid_argument&) {
+                cout << "Invalid choice. Please try again: ";
             }
         }
 
         switch (option) {
             case 1: {
-                std::cout << "\nEnter part of the movie name: ";
-                std::string input;
-                getline(std::cin, input);
+                cout << "\nEnter part of the movie name: ";
+                string input;
+                getline(cin, input);
 
                 MovieSearchCommand searchCommand;
-                std::vector<int> indexes = searchCommand.execute(input, db);
+                vector<int> indexes = searchCommand.execute(input, db);
 
                 if (indexes.empty()) {
-                    std::cout << "No movies found for the given input." << std::endl;
+                    cout << "No movies found for the given input." << endl;
                 } else {
                     MovieSelectionMenu selectionMenu(indexes);
                     selectionMenu.handleInput(user, db);
@@ -215,7 +215,7 @@ public:
                 break;
             }
             case 2: {
-                std::vector<std::string> tags = {
+                vector<string> tags = {
                         "cult", "horror", "gothic", "murder", "atmospheric", "violence", "romantic",
                         "inspiring", "stupid", "feel-good", "cruelty", "dramatic", "action",
                         "revenge", "sadist", "queer", "flashback", "mystery", "suspenseful",
@@ -231,40 +231,40 @@ public:
                         "blaxploitation", "whimsical", "intrigue", "allegory", "anti war",
                         "avant garde", "suicidal", "magical realism", "non fiction"
                 };
-                std::cout << "\nAvailable tags:\n";
+                cout << "\nAvailable tags:\n";
                 for (const auto& tag : tags) {
-                    std::cout << "[" << tag << "] ";
+                    cout << "[" << tag << "] ";
                 }
-                std::cout << "\nWrite a tag: ";
-                std::string input;
-                getline(std::cin, input);
+                cout << "\nWrite a tag: ";
+                string input;
+                getline(cin, input);
 
-                if (std::find(tags.begin(), tags.end(), input) != tags.end()) {
+                if (find(tags.begin(), tags.end(), input) != tags.end()) {
                     TagSearchCommand searchCommand;
-                    std::vector<int> indexes = searchCommand.execute(input, db);
+                    vector<int> indexes = searchCommand.execute(input, db);
 
                     if (indexes.empty()) {
-                        std::cout << "No movies found for the given tags." << std::endl;
+                        cout << "No movies found for the given tags." << endl;
                     } else {
                         MovieSelectionMenu selectionMenu(indexes);
                         selectionMenu.handleInput(user, db);
                     }
                 } else {
                     int choice;
-                    std::cout << "Invalid tag. Options:\n1. Try again\n2. Exit\n";
-                    std::cout << "Enter your choice: ";
+                    cout << "Invalid tag. Options:\n1. Try again\n2. Exit\n";
+                    cout << "Enter your choice: ";
                     while (true) {
-                        std::string input;
-                        std::getline(std::cin, input);
+                        string input;
+                        getline(cin, input);
                         try {
-                            choice = std::stoi(input);
+                            choice = stoi(input);
                             if (choice == 1 || choice == 2) {
                                 break;
                             } else {
-                                std::cout << "Invalid choice. Please try again: ";
+                                cout << "Invalid choice. Please try again: ";
                             }
-                        } catch (const std::invalid_argument&) {
-                            std::cout << "Invalid choice. Please try again: ";
+                        } catch (const invalid_argument&) {
+                            cout << "Invalid choice. Please try again: ";
                         }
                     }
                     if (choice == 1) {
@@ -283,29 +283,29 @@ public:
 class MainMenu : public Menu {
 public:
     void display() override {
-        std::cout << "\nMain Menu:\n";
-        std::cout << "1. Show Liked Movies\n";
-        std::cout << "2. Show Watch Later Movies\n";
-        std::cout << "3. Search Movies\n";
-        std::cout << "4. Show Recommendations\n";
-        std::cout << "5. Exit\n";
-        std::cout << "Enter your choice: ";
+        cout << "\nMain Menu:\n";
+        cout << "1. Show Liked Movies\n";
+        cout << "2. Show Watch Later Movies\n";
+        cout << "3. Search Movies\n";
+        cout << "4. Show Recommendations\n";
+        cout << "5. Exit\n";
+        cout << "Enter your choice: ";
     }
 
     void handleInput(User& user, Database* db) override {
         int option;
         while (true) {
-            std::string input;
-            std::getline(std::cin, input);
+            string input;
+            getline(cin, input);
             try {
-                option = std::stoi(input);
+                option = stoi(input);
                 if (option >= 1 && option <= 5) {
                     break;
                 } else {
-                    std::cout << "Invalid choice. Please try again: ";
+                    cout << "Invalid choice. Please try again: ";
                 }
-            } catch (const std::invalid_argument&) {
-                std::cout << "Invalid choice. Please try again: ";
+            } catch (const invalid_argument&) {
+                cout << "Invalid choice. Please try again: ";
             }
         }
 
@@ -323,11 +323,11 @@ public:
                 break;
             }
             case 4:
-                std::cout<<"Showing Recommendations...\n";
+                cout<<"Showing Recommendations...\n";
                 user.showRecommendations(db);
                 break;
             case 5:
-                std::cout << "Exiting...\n";
+                cout << "Exiting...\n";
                 exit(0);
         }
     }

@@ -2,7 +2,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <vector>
 
 #include "headers/database.h"
 #include "headers/search.h"
@@ -13,17 +12,17 @@
 
 int main() {
     Database* db = Database::getInstance();
-    std::string trieFile = "../datasets/trie_data.txt";
+    string trieFile = "../datasets/trie_data.txt";
 
-    std::ifstream infile(trieFile);
+    ifstream infile(trieFile);
     if (!infile.good()) {
         load_data();
-        std::cout << "No existing trie file found. Loading data and generating trie..." << std::endl;
+        cout << "No existing trie file found. Loading data and generating trie..." << endl;
         db->generateTrie();
         db->saveTrieToFile(trieFile);
     } else {
         load_data();
-        std::cout << "Loading trie from file..." << std::endl;
+        cout << "Loading trie from file..." << endl;
         db->loadTrieFromFile(trieFile);
     }
 

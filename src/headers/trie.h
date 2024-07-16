@@ -8,13 +8,14 @@
 #include <sstream>
 #include <map>
 #include <mutex>
+
 #include "utility.h"
 
 struct TrieNode {
     TrieNode* childNode[26]{};
-    std::vector<int> movieIndices;
-    std::unordered_set<int> movieIndicesSet;
-    std::mutex nodeMutex;
+    vector<int> movieIndices;
+    unordered_set<int> movieIndicesSet;
+    mutex nodeMutex;
 
     TrieNode() {
         for (auto &i : childNode) {
@@ -33,7 +34,7 @@ class Trie {
 private:
     TrieNode* root;
 
-    void collectWords(TrieNode* node, const std::string& word, std::map<std::string, std::vector<int>>& wordMap) {
+    void collectWords(TrieNode* node, const string& word, map<string, vector<int>>& wordMap) {
         if (!node) return;
         if (!node->movieIndices.empty()) {
             wordMap[word] = node->movieIndices;
@@ -48,11 +49,11 @@ private:
 public:
     Trie() : root(new TrieNode()) {}
 
-    void insertPrefix(const std::string& word, int index) {
+    void insertPrefix(const string& word, int index) {
         TrieNode* current = root;
         for (char c : word) {
             int i = c - 'a';
-            std::lock_guard<std::mutex> lock(current->nodeMutex);
+            lock_guard<mutex> lock(current->nodeMutex);
             if (current->childNode[i] == nullptr) {
                 current->childNode[i] = new TrieNode();
             }
@@ -68,17 +69,17 @@ public:
         }
     }
 
-    void insertWord(const std::string& word, int index) {
+    void insertWord(const string& word, int index) {
         TrieNode* current = root;
         for (char c : word) {
             int i = c - 'a';
-            std::lock_guard<std::mutex> lock(current->nodeMutex);
+            lock_guard<mutex> lock(current->nodeMutex);
             if (current->childNode[i] == nullptr) {
                 current->childNode[i] = new TrieNode();
             }
             current = current->childNode[i];
         }
-        std::lock_guard<std::mutex> lock(current->nodeMutex);
+        lock_guard<mutex> lock(current->nodeMutex);
         if (current->movieIndicesSet.count(index) == 0) {
             current->movieIndices.push_back(index);
             current->movieIndicesSet.insert(index);
@@ -89,28 +90,28 @@ public:
         return root;
     }
 
-    std::vector<int> getMovieIndices(const std::string& word) const {
+    vector<int> getMovieIndices(const string& word) const {
         TrieNode* current = root;
-        std::string parsed_word = toAlphabet(word);
+        string parsed_word = toAlphabet(word);
         for (char c : parsed_word) {
             int i = c - 'a';
             if (current->childNode[i] == nullptr) {
-                std::cout << "No movies found for prefix: " << parsed_word << std::endl;
-                return std::vector<int>();
+                cout << "No movies found for prefix: " << parsed_word << endl;
+                return vector<int>();
             }
             current = current->childNode[i];
         }
         return current->movieIndices;
     }
 
-    void saveTrie(const std::string& filename) {
-        std::ofstream file(filename);
+    void saveTrie(const string& filename) {
+        ofstream file(filename);
         if (!file.is_open()) {
-            std::cerr << "Failed to open file for saving Trie." << std::endl;
+            cerr << "Failed to open file for saving Trie." << endl;
             return;
         }
 
-        std::map<std::string, std::vector<int>> wordMap;
+        map<string, vector<int>> wordMap;
         collectWords(root, "", wordMap);
 
         for (const auto& pair : wordMap) {
@@ -126,30 +127,30 @@ public:
         file.close();
     }
 
-    void loadTrie(const std::string& filename) {
-        std::ifstream file(filename);
+    void loadTrie(const string& filename) {
+        ifstream file(filename);
         if (!file.is_open()) {
-            std::cerr << "Failed to open file for loading Trie." << std::endl;
+            cerr << "Failed to open file for loading Trie." << endl;
             return;
         }
 
-        std::string line;
+        string line;
         int count = 0;
-        std::cout << "Words loaded (chunks of 50k):\n";
+        cout << "Words loaded (chunks of 50k):\n";
         while (getline(file, line)) {
             if (line.empty()) continue;
             size_t pos = line.find('<');
-            std::string word = line.substr(0, pos);
-            std::string indicesStr = line.substr(pos + 1);
-            std::stringstream ss(indicesStr);
-            std::string indexStr;
+            string word = line.substr(0, pos);
+            string indicesStr = line.substr(pos + 1);
+            stringstream ss(indicesStr);
+            string indexStr;
             while (getline(ss, indexStr, ',')) {
-                int index = std::stoi(indexStr);
+                int index = stoi(indexStr);
                 insertWord(word, index);
             }
             count++;
             if (count % 50000 == 0) {
-                std::cout << "|";
+                cout << "|";
             }
         }
         file.close();

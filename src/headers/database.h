@@ -18,16 +18,15 @@
 
 class Database {
 private:
-    std::vector<Movie> movies;
+    vector<Movie> movies;
     static Database* instance;
     Trie trie;
     Database() = default;
 
     // Typedef of a function pointer type
-    typedef void (Database::*ProcessFunc)(const std::vector<std::string>&, int);
+    typedef void (Database::*ProcessFunc)(const vector<string>&, int);
 
 public:
-
     // Getters
 
     static Database* getInstance() {
@@ -37,7 +36,7 @@ public:
         return instance;
     }
 
-    std::vector<Movie> getMovies() const {
+    vector<Movie> getMovies() const {
         return movies;
     }
 
@@ -49,19 +48,19 @@ public:
     // Methods
 
     // Add movie
-    void addMovieByValues(const std::string& imdbId, const std::string& title, const std::string& plotSynopsis,
-                          const std::vector<std::string>& tags, const std::string& split, const std::string& synopsisSource) {
+    void addMovieByValues(const string& imdbId, const string& title, const string& plotSynopsis,
+                          const vector<string>& tags, const string& split, const string& synopsisSource) {
         movies.emplace_back(imdbId, title, plotSynopsis, tags, split, synopsisSource);
     }
 
 
     // Trie save/load
 
-    void saveTrieToFile(const std::string& filename) {
+    void saveTrieToFile(const string& filename) {
         trie.saveTrie(filename);
     }
 
-    void loadTrieFromFile(const std::string& filename) {
+    void loadTrieFromFile(const string& filename) {
         trie.loadTrie(filename);
     }
 
@@ -69,9 +68,9 @@ public:
     // Trie Generation
 
     void generateTrie() {
-        int numThreads = std::thread::hardware_concurrency();
+        int numThreads = thread::hardware_concurrency();
         int chunkSize = movies.size() / numThreads;
-        std::vector<std::thread> threads;
+        vector<thread> threads;
 
         // Define the processing priority order
         ProcessFunc processFuncs[] = {
@@ -82,7 +81,7 @@ public:
         };
 
         // Process titles
-        std::cout << "Processing titles..." << std::endl;
+        cout << "Processing titles..." << endl;
         for (auto func : processFuncs) {
             threads.clear();
             for (int i = 0; i < numThreads; ++i) {
@@ -94,7 +93,7 @@ public:
         }
 
         // Process descriptions
-        std::cout << "Processing descriptions..." << std::endl;
+        cout << "Processing descriptions..." << endl;
         threads.clear();
         for (int i = 0; i < numThreads; ++i) {
             int start = i * chunkSize;
@@ -107,28 +106,28 @@ public:
 
     void processTitles(int start, int end, ProcessFunc processFunc) {
         for (int i = start; i < end; ++i) {
-            std::vector<std::string> title = splitString(toAlphabet(movies[i].title), ' ');
+            vector<string> title = splitString(toAlphabet(movies[i].title), ' ');
             (this->*processFunc)(title, i);
         }
     }
 
     // Process priorities
 
-    void processInsertWord(const std::vector<std::string>& title, int index) {
+    void processInsertWord(const vector<string>& title, int index) {
         trie.insertWord(title[0], index);
     }
 
-    void processInsertAllWords(const std::vector<std::string>& title, int index) {
+    void processInsertAllWords(const vector<string>& title, int index) {
         for (const auto &word: title) {
             trie.insertWord(word, index);
         }
     }
 
-    void processInsertPrefix(const std::vector<std::string>& title, int index) {
+    void processInsertPrefix(const vector<string>& title, int index) {
         trie.insertPrefix(title[0], index);
     }
 
-    void processInsertAllPrefixes(const std::vector<std::string>& title, int index) {
+    void processInsertAllPrefixes(const vector<string>& title, int index) {
         for (const auto &word: title) {
             trie.insertPrefix(word, index);
         }
@@ -137,13 +136,13 @@ public:
     void processSubwordInDescription(int start, int end) {
         for (int i = start; i < end; ++i) {
             auto description = splitString(toAlphabet(movies[i].plot_synopsis), ' ');
-            std::unordered_set<std::string> uniqueWords;
+            unordered_set<string> uniqueWords;
 
             for (const auto &word: description) {
                 if (uniqueWords.count(word) == 0) {
                     uniqueWords.insert(word);
                     for (int j = 0; j < word.size(); j++) {
-                        std::string prefix = word.substr(j);
+                        string prefix = word.substr(j);
                         trie.insertPrefix(prefix, i);
                     }
                 }

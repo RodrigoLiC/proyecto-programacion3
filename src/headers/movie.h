@@ -6,17 +6,19 @@
 #include <vector>
 #include <iostream>
 
+using namespace std;
+
 class Movie {
 public:
-    std::string imdb_id;
-    std::string title;
-    std::string plot_synopsis;
-    std::vector<std::string> tags;
-    std::string split;
-    std::string synopsis_source;
+    string imdb_id;
+    string title;
+    string plot_synopsis;
+    vector<string> tags;
+    string split;
+    string synopsis_source;
 
-    Movie(const std::string &imdbId, const std::string &title, const std::string &plotSynopsis,
-          const std::vector<std::string> &tags, const std::string &split, const std::string &synopsisSource) :
+    Movie(const string &imdbId, const string &title, const string &plotSynopsis,
+          const vector<string> &tags, const string &split, const string &synopsisSource) :
             imdb_id(imdbId), title(title), plot_synopsis(plotSynopsis), tags(tags), split(split),
             synopsis_source(synopsisSource) {}
 };
@@ -35,16 +37,16 @@ public:
     FullDisplayMovie(const Movie &movie) : DisplayMovie(movie) {}
 
     void display() const override {
-        std::cout << "IMDB_ID: " << movie.imdb_id << std::endl;
-        std::cout << "Title: " << movie.title << std::endl;
-        std::cout << "Synopsis: " << movie.plot_synopsis << std::endl;
-        std::cout << "Split: " << movie.split << std::endl;
-        std::cout << "Synopsis Source: " << movie.synopsis_source << std::endl;
-        std::cout << "Tags: ";
-        for (const std::string &tag : movie.tags) {
-            std::cout << "[" << tag << "] ";
+        cout << "IMDB_ID: " << movie.imdb_id << endl;
+        cout << "Title: " << movie.title << endl;
+        cout << "Synopsis: " << movie.plot_synopsis << endl;
+        cout << "Split: " << movie.split << endl;
+        cout << "Synopsis Source: " << movie.synopsis_source << endl;
+        cout << "Tags: ";
+        for (const string &tag : movie.tags) {
+            cout << "[" << tag << "] ";
         }
-        std::cout << std::endl;
+        cout << endl;
     }
 };
 
@@ -53,21 +55,21 @@ public:
     PreviewDisplayMovie(const Movie &movie) : DisplayMovie(movie) {}
 
     void display() const override {
-        std::cout << "==================================================\n";
-        std::cout << "IMDB_ID: " << movie.imdb_id << std::endl;
-        std::cout << "Title: " << movie.title << std::endl;
+        cout << "==================================================\n";
+        cout << "IMDB_ID: " << movie.imdb_id << endl;
+        cout << "Title: " << movie.title << endl;
         if (movie.plot_synopsis.size() > 100) {
-            std::cout << "Synopsis: " << movie.plot_synopsis.substr(0, 96) << "..." << std::endl;
+            cout << "Synopsis: " << movie.plot_synopsis.substr(0, 96) << "..." << endl;
         } else {
-            std::cout << "Synopsis: " << movie.plot_synopsis << std::endl;
+            cout << "Synopsis: " << movie.plot_synopsis << endl;
         }
-        std::cout << "Split: " << movie.split << std::endl;
-        std::cout << "Synopsis Source: " << movie.synopsis_source << std::endl;
-        std::cout << "Tags: ";
-        for (const std::string &tag : movie.tags) {
-            std::cout << "[" << tag << "] ";
+        cout << "Split: " << movie.split << endl;
+        cout << "Synopsis Source: " << movie.synopsis_source << endl;
+        cout << "Tags: ";
+        for (const string &tag : movie.tags) {
+            cout << "[" << tag << "] ";
         }
-        std::cout << "\n";
+        cout << "\n";
     }
 };
 
@@ -79,18 +81,18 @@ public:
     };
 
     static void displayMovie(DisplayType type, const Movie &movie) {
-        std::unique_ptr<DisplayMovie> displayMovie;
+        unique_ptr<DisplayMovie> displayMovie;
         switch (type) {
             case FULL: {
-                displayMovie = std::make_unique<FullDisplayMovie>(movie);
+                displayMovie = make_unique<FullDisplayMovie>(movie);
                 break;
             }
             case PREVIEW: {
-                displayMovie = std::make_unique<PreviewDisplayMovie>(movie);
+                displayMovie = make_unique<PreviewDisplayMovie>(movie);
                 break;
             }
             default:
-                std::cerr << "Unknown display type" << std::endl;
+                cerr << "Unknown display type" << endl;
                 return;
         }
         displayMovie->display();

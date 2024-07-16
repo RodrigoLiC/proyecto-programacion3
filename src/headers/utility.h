@@ -7,8 +7,10 @@
 #include <string>
 #include <algorithm>
 
-std::string toAlphabet(const std::string& word) {
-    std::string result;
+using namespace std;
+
+string toAlphabet(const string& word) {
+    string result;
     for (char c : word) {
         if (c >= 'A' && c <= 'Z') {
             result += static_cast<char>(c + ('a' - 'A'));
@@ -22,25 +24,25 @@ std::string toAlphabet(const std::string& word) {
     return result;
 }
 
-std::vector<std::string> splitString(const std::string& str, char delimiter) {
-    std::vector<std::string> substrings;
-    std::stringstream ss(str);
-    std::string substring;
+vector<string> splitString(const string& str, char delimiter) {
+    vector<string> substrings;
+    stringstream ss(str);
+    string substring;
     while (getline(ss, substring, delimiter)) {
         substrings.push_back(substring);
     }
     return substrings;
 }
 
-std::vector<std::string> trimLeadingSpaces(const std::vector<std::string>& vec) {
-    std::vector<std::string> trimmedVec;
+vector<string> trimLeadingSpaces(const vector<string>& vec) {
+    vector<string> trimmedVec;
 
     // Function lambda to trim leading spaces of a string
-    auto trimLeft = [](const std::string& s) -> std::string {
-        auto it = std::find_if(s.begin(), s.end(), [](unsigned char ch) {
-            return !std::isspace(ch);
+    auto trimLeft = [](const string& s) -> string {
+        auto it = find_if(s.begin(), s.end(), [](unsigned char ch) {
+            return !isspace(ch);
         });
-        return std::string(it, s.end());
+        return string(it, s.end());
     };
 
     // Apply the trimLeft lambda to each string in the original vector
