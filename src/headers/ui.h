@@ -1,3 +1,4 @@
+//src/headers/ui.h
 #ifndef PROYECTO_PROGRAMACION3_UI_H
 #define PROYECTO_PROGRAMACION3_UI_H
 
@@ -8,7 +9,7 @@
 #include "load.h"
 #include "user.h"
 
-/** Base menu class**/
+/* Base menu class*/
 class Menu {
 public:
     virtual void display() = 0;
@@ -51,33 +52,65 @@ public:
             display();
 
             int choice;
-            std::cin >> choice;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the input buffer
+            while (true) {
+                std::string input;
+                std::getline(std::cin, input);
+                try {
+                    choice = std::stoi(input);
+                    if (choice >= 1 && choice <= 4) {
+                        break;
+                    } else {
+                        std::cout << "Invalid choice. Please try again: ";
+                    }
+                } catch (const std::invalid_argument&) {
+                    std::cout << "Invalid choice. Please try again: ";
+                }
+            }
 
             switch (choice) {
                 case 1: {
                     std::cout << "Enter the number of the movie to select: ";
                     int movieChoice;
-                    std::cin >> movieChoice;
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the input buffer
-
-                    if (movieChoice > 0 && movieChoice <= 5 && (page * 5 + movieChoice - 1) < indexes.size()) {
-                        int movieIndex = indexes[page * 5 + movieChoice - 1];
-                        MovieFactory::displayMovie(MovieFactory::FULL, db->getMovies()[movieIndex]);
-
-                        int userChoice;
-                        std::cout << "Options:\n1. Like\n2. Watch Later\n3. Return to Search\n4. Return to Main Menu\n";
-                        std::cout << "Enter your choice: ";
-                        std::cin >> userChoice;
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the input buffer
-
-                        if (userChoice == 4) {
-                            return; // Return to main menu
-                        } else {
-                            continueSearching = handleUserChoice(userChoice, movieIndex, user);
+                    while (true) {
+                        std::string input;
+                        std::getline(std::cin, input);
+                        try {
+                            movieChoice = std::stoi(input);
+                            if (movieChoice > 0 && movieChoice <= 5 && (page * 5 + movieChoice - 1) < indexes.size()) {
+                                break;
+                            } else {
+                                std::cout << "Invalid choice. Please try again: ";
+                            }
+                        } catch (const std::invalid_argument&) {
+                            std::cout << "Invalid choice. Please try again: ";
                         }
+                    }
+
+                    int movieIndex = indexes[page * 5 + movieChoice - 1];
+                    MovieFactory::displayMovie(MovieFactory::FULL, db->getMovies()[movieIndex]);
+
+                    int userChoice;
+                    std::cout << "Options:\n1. Like\n2. Watch Later\n3. Return to Search\n4. Return to Main Menu\n";
+                    std::cout << "Enter your choice: ";
+                    while (true) {
+                        std::string input;
+                        std::getline(std::cin, input);
+                        try {
+                            userChoice = std::stoi(input);
+                            if (userChoice >= 1 && userChoice <= 4) {
+                                break;
+                            } else {
+                                std::cout << "Invalid choice. Please try again: ";
+                            }
+                        } catch (const std::invalid_argument&) {
+                            std::cout << "Invalid choice. Please try again: ";
+                        }
+                    }
+
+                    if (userChoice == 4) {
+                        return; // Return to main menu
                     } else {
-                        std::cout << "Invalid choice. Returning to search...\n";
+                        continueSearching = handleUserChoice(userChoice, movieIndex, user);
                     }
                     break;
                 }
@@ -93,10 +126,6 @@ public:
                     break;
                 case 4:
                     return; // Return to main menu
-                default:
-                    std::cout << "Invalid choice. Returning to search...\n";
-                    continueSearching = false; // Invalid choice, return to search
-                    break;
             }
         }
     }
@@ -119,12 +148,26 @@ public:
         int nextChoice;
         std::cout << "Options:\n1. Continue Searching\n2. Return to Main Menu\n";
         std::cout << "Enter your choice: ";
-        std::cin >> nextChoice;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the input buffer
+        while (true) {
+            std::string input;
+            std::getline(std::cin, input);
+            try {
+                nextChoice = std::stoi(input);
+                if (nextChoice == 1 || nextChoice == 2) {
+                    break;
+                } else {
+                    std::cout << "Invalid choice. Please try again: ";
+                }
+            } catch (const std::invalid_argument&) {
+                std::cout << "Invalid choice. Please try again: ";
+            }
+        }
 
         return nextChoice == 1;
     }
 };
+
+
 
 // Movie Search Menu Class
 class MovieSearchMenu : public Menu {
@@ -139,8 +182,20 @@ public:
 
     void handleInput(User& user, Database* db) override {
         int option;
-        std::cin >> option;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the input buffer
+        while (true) {
+            std::string input;
+            std::getline(std::cin, input);
+            try {
+                option = std::stoi(input);
+                if (option >= 1 && option <= 3) {
+                    break;
+                } else {
+                    std::cout << "Invalid choice. Please try again: ";
+                }
+            } catch (const std::invalid_argument&) {
+                std::cout << "Invalid choice. Please try again: ";
+            }
+        }
 
         switch (option) {
             case 1: {
@@ -161,20 +216,20 @@ public:
             }
             case 2: {
                 std::vector<std::string> tags = {
-                    "cult", "horror", "gothic", "murder", "atmospheric", "violence", "romantic",
-                    "inspiring", "stupid", "feel-good", "cruelty", "dramatic", "action",
-                    "revenge", "sadist", "queer", "flashback", "mystery", "suspenseful",
-                    "neo noir", "prank", "psychedelic", "tragedy", "autobiographical",
-                    "home movie", "good versus evil", "depressing", "realism", "boring",
-                    "haunting", "sentimental", "paranormal", "historical", "storytelling",
-                    "comedy", "fantasy", "philosophical", "adult comedy", "cute",
-                    "entertaining", "bleak", "humor", "plot twist", "christian film",
-                    "pornographic", "insanity", "brainwashing", "sci-fi", "dark",
-                    "claustrophobic", "psychological", "melodrama", "historical fiction",
-                    "absurd", "satire", "alternate reality", "alternate history",
-                    "comic", "grindhouse film", "thought-provoking", "clever", "western",
-                    "blaxploitation", "whimsical", "intrigue", "allegory", "anti war",
-                    "avant garde", "suicidal", "magical realism", "non fiction"
+                        "cult", "horror", "gothic", "murder", "atmospheric", "violence", "romantic",
+                        "inspiring", "stupid", "feel-good", "cruelty", "dramatic", "action",
+                        "revenge", "sadist", "queer", "flashback", "mystery", "suspenseful",
+                        "neo noir", "prank", "psychedelic", "tragedy", "autobiographical",
+                        "home movie", "good versus evil", "depressing", "realism", "boring",
+                        "haunting", "sentimental", "paranormal", "historical", "storytelling",
+                        "comedy", "fantasy", "philosophical", "adult comedy", "cute",
+                        "entertaining", "bleak", "humor", "plot twist", "christian film",
+                        "pornographic", "insanity", "brainwashing", "sci-fi", "dark",
+                        "claustrophobic", "psychological", "melodrama", "historical fiction",
+                        "absurd", "satire", "alternate reality", "alternate history",
+                        "comic", "grindhouse film", "thought-provoking", "clever", "western",
+                        "blaxploitation", "whimsical", "intrigue", "allegory", "anti war",
+                        "avant garde", "suicidal", "magical realism", "non fiction"
                 };
                 std::cout << "\nAvailable tags:\n";
                 for (const auto& tag : tags) {
@@ -198,8 +253,20 @@ public:
                     int choice;
                     std::cout << "Invalid tag. Options:\n1. Try again\n2. Exit\n";
                     std::cout << "Enter your choice: ";
-                    std::cin >> choice;
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    while (true) {
+                        std::string input;
+                        std::getline(std::cin, input);
+                        try {
+                            choice = std::stoi(input);
+                            if (choice == 1 || choice == 2) {
+                                break;
+                            } else {
+                                std::cout << "Invalid choice. Please try again: ";
+                            }
+                        } catch (const std::invalid_argument&) {
+                            std::cout << "Invalid choice. Please try again: ";
+                        }
+                    }
                     if (choice == 1) {
                         handleInput(user, db);
                     }
@@ -208,9 +275,6 @@ public:
             }
             case 3:
                 return; // Back to main menu
-            default:
-                std::cout << "Invalid choice. Please try again.\n";
-                break;
         }
     }
 };
@@ -223,14 +287,27 @@ public:
         std::cout << "1. Show Liked Movies\n";
         std::cout << "2. Show Watch Later Movies\n";
         std::cout << "3. Search Movies\n";
-        std::cout << "4. Exit\n";
+        std::cout << "4. Show Recommendations\n";
+        std::cout << "5. Exit\n";
         std::cout << "Enter your choice: ";
     }
 
     void handleInput(User& user, Database* db) override {
         int option;
-        std::cin >> option;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear the input buffer
+        while (true) {
+            std::string input;
+            std::getline(std::cin, input);
+            try {
+                option = std::stoi(input);
+                if (option >= 1 && option <= 5) {
+                    break;
+                } else {
+                    std::cout << "Invalid choice. Please try again: ";
+                }
+            } catch (const std::invalid_argument&) {
+                std::cout << "Invalid choice. Please try again: ";
+            }
+        }
 
         switch (option) {
             case 1:
@@ -246,14 +323,16 @@ public:
                 break;
             }
             case 4:
+                std::cout << "Por implementar.\n";
+//                user.showRecommendations(db);
+                break;
+            case 5:
                 std::cout << "Exiting...\n";
                 exit(0);
-            default:
-                std::cout << "Invalid choice. Please try again.\n";
-                break;
         }
     }
 };
+
 
 
 
