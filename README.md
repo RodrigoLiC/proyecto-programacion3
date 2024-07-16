@@ -32,6 +32,43 @@ Este proyecto tiene como propósito desarrollar una plataforma de streaming que 
 - `movie.h`
 - `main.cpp`
 
+### Explicación de los headers
+
+1. **Database.h:**
+- Singleton: Database implementa el patrón Singleton para asegurar que solo haya una instancia de la base de datos en todo el programa.
+
+- Multithreading: Se utiliza std::thread para aprovechar múltiples núcleos del procesador al generar el Trie, mejorando así la eficiencia.
+
+- Procesamiento en Bloques: Las películas se procesan en bloques (chunks) distribuidos entre varios hilos, tanto para los títulos como para las descripciones.
+
+- Uso de Trie: El Trie se utiliza para búsquedas rápidas de palabras y prefijos, lo que es útil para funcionalidades de búsqueda en la base de datos.
+
+2. **Load.h:**
+- El archivo load.h proporciona una función para cargar una base de datos de películas desde un archivo CSV en la clase Database. Utiliza técnicas para manejar correctamente los delimitadores dentro de comillas y distribuye la carga entre múltiples hilos para mejorar el rendimiento al procesar grandes volúmenes de datos.
+
+3. **Search.h:**
+- El archivo search.h define una interfaz SearchCommand para comandos de búsqueda y proporciona dos implementaciones concretas: MovieSearchCommand para búsquedas por palabras clave en títulos de películas y TagSearchCommand para búsquedas por etiquetas. Estos comandos utilizan la estructura de datos Trie y la base de datos de películas para realizar búsquedas eficientes y precisas.
+
+4. **Trie.h:**
+- El archivo trie.h define una estructura de datos Trie que permite búsquedas rápidas y eficientes de palabras y prefijos, útil para implementar las funcionalidades de búsqueda en una base de datos de películas. La clase Trie proporciona métodos para insertar palabras y prefijos, buscar índices de películas, y guardar/cargar el Trie desde un archivo, garantizando la seguridad en operaciones concurrentes mediante el uso de mutexes.
+
+5. **Ui.h:**
+- El archivo ui.h proporciona una interfaz de usuario basada en menús para la plataforma de streaming. Define una clase base Menu y tres clases derivadas (MovieSelectionMenu, MovieSearchMenu, MainMenu) que implementan menús específicos. Estos menús permiten al usuario buscar películas, ver detalles, marcar películas como favoritas o para ver más tarde, y navegar por las opciones del programa.
+6. **Utility.h:**
+
+- El archivo utility.h proporciona funciones auxiliares para el procesamiento de cadenas:
+- toAlphabet: Convierte una cadena a minúsculas y reemplaza caracteres no alfabéticos por espacios.
+- splitString: Divide una cadena en subcadenas utilizando un delimitador específico.
+- trimLeadingSpaces: Elimina los espacios en blanco iniciales de cada cadena en un vector de cadenas.
+7. **User.h:**
+- La clase User en el archivo user.h gestiona las preferencias del usuario en la plataforma de streaming. Permite al usuario:
+- Marcar películas como "liked" o "watch later".
+- Mostrar las listas de películas gustadas y las películas para ver más tarde.
+- Esta clase interactúa con la base de datos de películas para recuperar y mostrar la información relevante de las películas guardadas por el usuario.
+8. **Movie.h:**
+- El archivo movie.h define la estructura de una película (Movie) y las clases necesarias para visualizar las películas de diferentes maneras.
+9. **Main.cpp:**
+- Archivo en dónde se ejecuta todo el código. Se hace llamado a los headers.
 ## Instalación
 
 1. **Clonar el repositorio:**
@@ -85,7 +122,6 @@ El programa carga automáticamente la base de datos de películas desde `dataset
 ## Integrantes
 
 - Rodrigo Li Chumpitaz
-- Manuel Sebastian Taco Anton
 - Jorge Alexander Leon Villareyes
 - Diva Stewart Maquera Bobadilla
 
